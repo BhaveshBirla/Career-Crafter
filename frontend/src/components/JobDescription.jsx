@@ -32,7 +32,6 @@ const JobDescription = () => {
 
             }
         } catch (error) {
-            console.log(error);
             toast.error(error.response.data.message);
         }
     }
@@ -43,7 +42,6 @@ const JobDescription = () => {
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
                 if(res.data.success){
                     dispatch(setSingleJob(res.data.job));
-                    // console.log("The single job is ",singleJob);
                     setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
                 }
             } catch (error) {
