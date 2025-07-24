@@ -22,7 +22,7 @@ const Signup = () => {
         role: "",
         file: ""
     });
-    const {loading,user} = useSelector(store=>store.auth);
+    const { loading, user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -34,15 +34,27 @@ const Signup = () => {
     }
     const submitHandler = async (e) => {
         e.preventDefault();
-        const formData = new FormData();    //formdata object
+
+        // ✅ Check if all fields are filled
+        if (
+            !input.fullname.trim() ||
+            !input.email.trim() ||
+            !input.phoneNumber.trim() ||
+            !input.password.trim() ||
+            !input.role.trim() ||
+            !input.file
+        ) {
+            toast.error("Please fill all entries");
+            return; // stop submission
+        }
+
+        const formData = new FormData();
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
         formData.append("password", input.password);
         formData.append("role", input.role);
-        if (input.file) {
-            formData.append("file", input.file);
-        }
+        formData.append("file", input.file); // now guaranteed to be present
 
         try {
             dispatch(setLoading(true));
@@ -56,17 +68,18 @@ const Signup = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
-        } finally{
+            toast.error(error.response?.data?.message || "Something went wrong");
+        } finally {
             dispatch(setLoading(false));
         }
     }
 
-    useEffect(()=>{
-        if(user){
+
+    useEffect(() => {
+        if (user) {
             navigate("/");
         }
-    },[])
+    }, [])
     return (
         <div>
             <Navbar />
